@@ -6,9 +6,10 @@ from .dsp_lib import DspLib # pylint: disable=E0401
 class DspController:
     #dspLib = __import__('..dsp_libraries.DspLib')
     def __init__(self):
+        self.dsp_lib = DspLib()
         self.dsp_suite = dict()
     def addDspMethod(self, name):
-        self.dsp_suite[name] = getattr(DspLib, name)
+        self.dsp_suite[name] = getattr(self.dsp_lib, name)
     def executeDspSuite(self, params):
         for dspMethodName in self.dsp_suite:
             signal = self.dsp_suite[dspMethodName](params)

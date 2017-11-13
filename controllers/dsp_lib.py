@@ -5,17 +5,39 @@ import numpy
 class DspLib:
      #Removes all frequencies below 5 times the mean_value of the signal
      #frequencies. To remove noise? Somewhat useless method but oh well :)
-    def removeNoise(self, params):
+    def __init__(self):
+        pass
+
+    def remove_noise(self, params):
         fft_values = fft(params['signal'])
         mean_value = numpy.mean(abs(fft_values))
-        threshold = mean_value*5
+        threshold = mean_value*2
         print(threshold)
         for i in range(len(fft_values)):
-            if abs(fft_values[i][0]) < threshold:
-                fft_values[i] = [0, 0]
+            if abs(fft_values[i]) < threshold:
+                fft_values[i] = 0
+
         return ifft(fft_values).real
 
-    # function used in various internal functions to reduce redundant code
+    def remove_interference_peak(selfs, params):
+        fft_values = fft(params['signal'])
+        lower_freq = 300000
+        higher_freq = 400000
+        for i in range(len(fft_values)):
+            if (abs(fft_values[i]) < higher_freq) and (abs(fft_values[i]) > lower_freq):
+                fft_values[i] = 0
+        return ifft(fft_values).real
+
+    def keep_frequency_band(selfs, params):
+        fft_values = fft(params['signal'])
+        lower_freq = 2000
+        higher_freq = 100000
+        for i in range(len(fft_values)):
+            if (abs(fft_values[i]) > higher_freq) or (abs(fft_values[i]) < lower_freq):
+                fft_values[i] = 0
+        return ifft(fft_values).real
+
+     # function used in various internal functions to reduce redundant code
     def _get_norm_cutoff_and_nyq_freq(self, cutoff, sample_rate):
         nyq = 0.5 * cutoff
         normal_cutoff = sample_rate / nyq

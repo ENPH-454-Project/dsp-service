@@ -66,14 +66,16 @@ AUDIO_ARRAY = numpy.array(AUDIO[1], dtype=numpy.int16)
 REC_AUDIO_ARRAY = numpy.array(REC_AUDIO[1], dtype=numpy.int16)
 SAMPLE_RATE = AUDIO[0]
 REC_SAMPLE_RATE = REC_AUDIO[0]
-HIGH_CUTOFF = 40000 # Hz
-LOW_CUTOFF = 600
+HIGH_CUTOFF = 100000 # Hz
+LOW_CUTOFF = 0
+CUTOFF = 100000
 ORDER = 5
 handler({
-    'dsp_suite': ['remove_interference_peak','remove_noise'],
+    'dsp_suite': ['remove_interference_peak'],
     'params': {'sample_rate': SAMPLE_RATE,
                'high_cutoff': HIGH_CUTOFF,
                'low_cutoff': LOW_CUTOFF,
+               'cutoff': CUTOFF,
                'signal': REC_AUDIO_ARRAY,
                'order': ORDER}
 }, None)
