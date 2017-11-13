@@ -25,7 +25,8 @@ def handler(event, context):
     new_wav = numpy.array(result, dtype=numpy.int16)
     print(new_wav)
     print(params['sample_rate'])
-    write('you-really-need-to-grow-up.wav', params['sample_rate'], new_wav)
+    write('new_rec2.wav', params['sample_rate'], new_wav)
+    #write('you-really-need-to-grow-up.wav', params['sample_rate'], new_wav)
     return result
 
 def wav_player(filepath):
@@ -55,18 +56,27 @@ def wav_player(filepath):
     #close PyAudio
     _pyaudio.terminate()
 
-
-wav_player('you-need-to-grow-up.wav')
+fucked_up = read('new_rec2.wav')
+wav_player('rec2.wav')
+REC_AUDIO = read("rec2.wav")
+#wav_player('you-need-to-grow-up.wav')
 AUDIO = read("you-need-to-grow-up.wav")
 
 AUDIO_ARRAY = numpy.array(AUDIO[1], dtype=numpy.int16)
+REC_AUDIO_ARRAY = numpy.array(REC_AUDIO[1], dtype=numpy.int16)
 SAMPLE_RATE = AUDIO[0]
-CUTOFF = 1000 # Hz
+REC_SAMPLE_RATE = REC_AUDIO[0]
+HIGH_CUTOFF = 40000 # Hz
+LOW_CUTOFF = 600
 ORDER = 5
 handler({
-    'dsp_suite': ['butter_lowpass'],
-    'params': {'sample_rate': SAMPLE_RATE, 'cutoff': CUTOFF, 'signal': AUDIO_ARRAY,
+    'dsp_suite': ['remove_interference_peak','remove_noise'],
+    'params': {'sample_rate': SAMPLE_RATE,
+               'high_cutoff': HIGH_CUTOFF,
+               'low_cutoff': LOW_CUTOFF,
+               'signal': REC_AUDIO_ARRAY,
                'order': ORDER}
 }, None)
 
-wav_player('you-really-need-to-grow-up.wav')
+wav_player('new_rec2.wav')
+#wav_player('you-really-need-to-grow-up.wav')
