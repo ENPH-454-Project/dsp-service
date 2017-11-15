@@ -4,6 +4,7 @@ from scipy.io.wavfile import read, write
 #using this wavefile reader for now
 import numpy
 import pyaudio
+import time
 
 def handler(event, context):
     #1. receive wave packet and dsp suite
