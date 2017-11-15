@@ -81,6 +81,5 @@ handler({
 }, None)
 
 wav_player('new_rec2.wav')
-print('processing time:')
 print (time.clock() - time_start)
 #wav_player('you-really-need-to-grow-up.wav')
