@@ -55,7 +55,7 @@ def wav_player(filepath):
 
     #close PyAudio
     _pyaudio.terminate()
-
+time_start = time.clock()
 fucked_up = read('new_rec2.wav')
 wav_player('rec2.wav')
 REC_AUDIO = read("rec2.wav")
@@ -81,4 +81,5 @@ handler({
 }, None)
 
 wav_player('new_rec2.wav')
+print (time.clock() - time_start)
 #wav_player('you-really-need-to-grow-up.wav')
