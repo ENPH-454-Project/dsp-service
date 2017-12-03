@@ -4,8 +4,6 @@ from scipy.io.wavfile import read, write
 #using this wavefile reader for now
 import numpy
 import pyaudio
-import requests
-import time
 
 def handler(event, context):
     #1. receive wave packet and dsp suite
@@ -27,8 +25,7 @@ def handler(event, context):
     new_wav = numpy.array(result, dtype=numpy.int16)
     print(new_wav)
     print(params['sample_rate'])
-    write('new_rec2.wav', params['sample_rate'], new_wav)
-    #write('you-really-need-to-grow-up.wav', params['sample_rate'], new_wav)
+    write('you-really-need-to-grow-up.wav', params['sample_rate'], new_wav)
     return result
 
 def wav_player(filepath):
@@ -57,32 +54,19 @@ def wav_player(filepath):
 
     #close PyAudio
     _pyaudio.terminate()
-start_time = time.clock()
 
-wav_player('rec2.wav')
-REC_AUDIO = read("rec2.wav")
-#wav_player('you-need-to-grow-up.wav')
-#AUDIO = read("you-need-to-grow-up.wav")
 
-#AUDIO_ARRAY = numpy.array(AUDIO[1], dtype=numpy.int16)
-REC_AUDIO_ARRAY = numpy.array(REC_AUDIO[1], dtype=numpy.int16)
-#SAMPLE_RATE = AUDIO[0]
-REC_SAMPLE_RATE = REC_AUDIO[0]
-HIGH_CUTOFF = 100000 # Hz
-LOW_CUTOFF = 0
-CUTOFF = 100000
+wav_player('you-need-to-grow-up.wav')
+AUDIO = read("you-need-to-grow-up.wav")
+
+AUDIO_ARRAY = numpy.array(AUDIO[1], dtype=numpy.int16)
+SAMPLE_RATE = AUDIO[0]
+CUTOFF = 1000 # Hz
 ORDER = 5
-result = handler({
-    'dsp_suite': ['keep_frequency_band'],
-    'params': {'sample_rate': REC_SAMPLE_RATE,
-               'high_cutoff': HIGH_CUTOFF,
-               'low_cutoff': LOW_CUTOFF,
-               'cutoff': CUTOFF,
-               'signal': REC_AUDIO_ARRAY,
+handler({
+    'dsp_suite': ['butter_lowpass'],
+    'params': {'sample_rate': SAMPLE_RATE, 'cutoff': CUTOFF, 'signal': AUDIO_ARRAY,
                'order': ORDER}
 }, None)
 
-wav_player('new_rec2.wav')
-print("time: ")
-print(time.clock()-start_time)
-#wav_player('you-really-need-to-grow-up.wav')
+wav_player('you-really-need-to-grow-up.wav')

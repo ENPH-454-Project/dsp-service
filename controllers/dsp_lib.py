@@ -30,7 +30,7 @@ class DspLib:
 
     def keep_frequency_band(selfs, params):
         fft_values = fft(params['signal'])
-        lower_freq = 2000
+        lower_freq = 0
         higher_freq = 100000
         for i in range(len(fft_values)):
             if (abs(fft_values[i]) > higher_freq) or (abs(fft_values[i]) < lower_freq):

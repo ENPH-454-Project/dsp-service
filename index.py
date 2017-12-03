@@ -1,9 +1,7 @@
 from controllers.dsp_controller import DspController
-from scipy.io.wavfile import read, write
 #using this wavefile reader for now
-import wave
 import numpy
-import pyaudio
+
 
 def handler(event, context):
     #1. receive wave packet and dsp suite
@@ -11,18 +9,23 @@ def handler(event, context):
 	#3. apply dsp suite to wave packet
 	#4. save wave packet to dynamoDB table
 
-    dspSuite = event['dsp_suite']
+    dsp_suite = event['dsp_suite']
     signal = event['signal']
+    params = event['params']
     print('received suite: ')
-    print(dspSuite)
+    print(dsp_suite)
 
-    dspController = DspController()
+    print('received params: ')
+    print(params)
 
-    for dspMethod in dspSuite:
-        print(dspMethod)
-        dspController.addDspMethod(dspMethod)
+    dsp_controller = DspController()
 
-    result = dspController.executeDspSuite(signal)
-    newWav = numpy.array(result, dtype=numpy.int16)
+    for dsp_method in dsp_suite:
+        print(dsp_method)
+        dsp_controller.addDspMethod(dsp_method)
 
-    return newWav
+    result = dsp_controller.executeDspSuite(signal)
+
+    new_signal = numpy.array(result, dtype=numpy.int16)
+
+    return new_signal
