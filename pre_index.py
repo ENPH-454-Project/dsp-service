@@ -22,7 +22,7 @@ def handler(event, context):
         dsp_controller.addDspMethod(dsp_method)
 
     result = dsp_controller.executeDspSuite(params)
-    new_wav = numpy.array(result, dtype=numpy.int16)
+    new_wav = numpy.array(result['signal'], dtype=numpy.int16)
     print(new_wav)
     print(params['sample_rate'])
     write('new_rec2.wav', params['sample_rate'], new_wav)
@@ -56,28 +56,33 @@ def wav_player(filepath):
     #close PyAudio
     _pyaudio.terminate()
 
-fucked_up = read('new_rec2.wav')
+#fucked_up = read('new_rec2.wav')
 wav_player('rec2.wav')
 REC_AUDIO = read("rec2.wav")
 #wav_player('you-need-to-grow-up.wav')
 AUDIO = read("you-need-to-grow-up.wav")
-
+IMPULSE_AUDIO = read('impulse_response.wav')
 AUDIO_ARRAY = numpy.array(AUDIO[1], dtype=numpy.int16)
 REC_AUDIO_ARRAY = numpy.array(REC_AUDIO[1], dtype=numpy.int16)
+IMPULSE_AUDIO_ARRAY = numpy.array(IMPULSE_AUDIO[1], dtype=numpy.int16)
 SAMPLE_RATE = AUDIO[0]
 REC_SAMPLE_RATE = REC_AUDIO[0]
-HIGH_CUTOFF = 100000 # Hz
-LOW_CUTOFF = 0
-CUTOFF = 100000
-ORDER = 5
+HIGH_CUTOFF = 0 # Hz
+LOW_CUTOFF = 100000
+CUTOFF = 10000000
+ORDER = 7
+
 handler({
-    'dsp_suite': ['remove_interference_peak'],
+    'dsp_suite': ['convolve_filter_coefficients'],
     'params': {'sample_rate': SAMPLE_RATE,
                'high_cutoff': HIGH_CUTOFF,
                'low_cutoff': LOW_CUTOFF,
                'cutoff': CUTOFF,
+               'clean_signal': AUDIO_ARRAY,
                'signal': REC_AUDIO_ARRAY,
-               'order': ORDER}
+               'order': ORDER,
+               'impulse': IMPULSE_AUDIO_ARRAY
+               }
 }, None)
 
 wav_player('new_rec2.wav')

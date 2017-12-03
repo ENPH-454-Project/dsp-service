@@ -12,5 +12,5 @@ class DspController:
         self.dsp_suite[name] = getattr(self.dsp_lib, name)
     def executeDspSuite(self, params):
         for dspMethodName in self.dsp_suite:
-            signal = self.dsp_suite[dspMethodName](params)
-        return signal
+            params['signal'] = self.dsp_suite[dspMethodName](params)
+        return params
